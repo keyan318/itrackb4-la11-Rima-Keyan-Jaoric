@@ -1,15 +1,13 @@
-# Laboratory Activity 10 — Your Own Table, Your Own Model
+# Lab Activity 11: Finish Your Own CRUD (Movie App)
 
-## Part G — README
+## G1. Route model binding
 
-### G1. Which column did you turn into a table, and why that one and not another?
+Binding in `MovieController` needs two things: the parameter must be type-hinted with the `Movie` model, and its name must match the route segment `{movie}`, so it is written `Movie $movie`. If only the type-hint is right (for example `Movie $m`), Laravel gives me an empty `Movie` object with no error. If only the name is right (for example `$movie` with no `Movie` type), I get the raw id string back and no record.
 
-I turned the `genre` column into a separate table because a movie can belong to a specific genre, and multiple movies can share the same genre. Instead of repeating the genre name for every movie, I created a separate table and connected it to the movies using a relationship.
+## G2. The Delete link
 
-### G2. What number did screenshot 6 show, and why exactly that number?
+The Delete link is an `<a>` tag, and a link can only send a GET request. The `movies/{movie}` address is correct, but my `destroy()` method only answers DELETE, so a GET can never reach it. Only the verb is wrong, which is why the delete only worked once I switched to a form with `@method('DELETE')`.
 
-Screenshot 6 showed 3 because that was the total number of records returned by the query. The result depended on the data I had inserted and the conditions used in the query.
+## G3. The second argument of old()
 
-### G3. Your belongsTo method is named in the singular. What would break if you made it plural?
-
-The `belongsTo` method is named in the singular because each movie belongs to one genre. If I made the method name plural, any code that calls the original singular relationship method would fail unless I also updated those references to use the new name.
+In my edit form, `old('title', $movie->title)` uses the movie's saved title as a fallback. Without the second argument, the form opens empty (like my Screenshot 3) because there is nothing to fall back on. With only the second argument (`$movie->title`), a rejected submit would bring back the original saved title and throw away what I typed, for example a cleared Title would reappear as "The Matrix".
